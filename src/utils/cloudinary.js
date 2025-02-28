@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import { Promise } from "mongoose";
 
 // Configuration
 cloudinary.config({
@@ -23,5 +24,14 @@ const uploadOnCloudinary = async (localFilePath) => {
         return null;
     }
 };
+
+// const deleteFromCloudinary = async (publicId) => {
+//     return new Promise((resolve, rejects) => {
+//         cloudinary.uploader.destroy(publicId, (error, result) => {
+//             if (error) return rejects(error);
+//             return resolve(result);
+//         });
+//     });
+// };
 
 export { uploadOnCloudinary };
