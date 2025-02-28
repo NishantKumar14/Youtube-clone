@@ -250,7 +250,7 @@ const changeCurrentUserPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
         .status(200)
-        .json(200, req.user, "Current user fetched successfully.");
+        .json(new ApiResponse(200, req.user, "Current user fetched successfully."));
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -303,7 +303,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
     const coverImage = await uploadOnCloudinary(coverImageLocalPath);
     if (!coverImage.url) {
-        throw new ApiError(400, "Error while uploading on cover i mage.");
+        throw new ApiError(400, "Error while uploading on cover image.");
     }
 
     const user = await User.findByIdAndUpdate(
