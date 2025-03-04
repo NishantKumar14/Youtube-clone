@@ -161,8 +161,8 @@ const loggedOutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined,
+            $unset: {
+                refreshToken: 1,
             },
         },
         {
@@ -185,8 +185,13 @@ const refreshAccessTokens = asyncHandler(async (req, res) => {
     const incomingRefreshToken =
         req.cookies.refreshToken || req.body.refreshToken;
 
-    if (!incomingRefreshToken) {
-        throw new ApiError(401, "Unauthorized request");
+    console.log("Incoming refresh token: ", incomingRefreshToken);
+
+    if (!incomingRefreshToken || typeof incomingRefreshToken !== "string") {
+        throw new ApiError(
+            401,
+            "Unauthorized request: Token is missing or invalid."
+        );
     }
 
     try {
@@ -194,6 +199,7 @@ const refreshAccessTokens = asyncHandler(async (req, res) => {
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         );
+        console.log("Decoded Token : ", decodedToken);
 
         const user = await User.findById(decodedToken?._id);
 
