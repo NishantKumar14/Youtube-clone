@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import jsonWebToekn from "jsonwebtoken";
+import jsonWebToken from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
@@ -62,7 +62,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 };
 
 userSchema.methods.generateAccessToken = function () {
-    return jsonWebToekn.sign(
+    return jsonWebToken.sign(
         {
             _id: this._id,
             email: this.email,
@@ -75,13 +75,15 @@ userSchema.methods.generateAccessToken = function () {
 };
 
 userSchema.methods.refreshAccessToken = async function () {
-    return jsonWebToekn.sign(
+    const token =  jsonWebToken.sign(
         {
             _id: this._id,
         },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
     );
+    // console.log("Refresh token : ",token);
+    return token;
 };
 
 export const User = mongoose.model("User", userSchema);

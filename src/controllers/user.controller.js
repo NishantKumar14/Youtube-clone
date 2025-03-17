@@ -8,8 +8,8 @@ import JWT from "jsonwebtoken";
 const generateAccessAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
-        const accessToken = user.generateAccessToken();
-        const refreshToken = user.refreshAccessToken();
+        const accessToken = await user.generateAccessToken();
+        const refreshToken = await user.refreshAccessToken();
 
         user.refreshToken = refreshToken;
         await user.save({ validateBeforeSave: false });
@@ -130,6 +130,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
         user._id
     );
+    // console.log("Refresh token 12: ", refreshToken);
 
     const loggedInUser = await User.findById(user._id).select(
         "-password -refreshToken"
